@@ -3,7 +3,8 @@
 Inception is a project focused on setting up a small infrastructure composed of multiple Docker containers. The objective is to create a multi-service environment using Docker Compose, where each service runs in its own container. The services include an NGINX web server with TLS, a WordPress site with php-fpm, and a MariaDB database.
 
 #### 1. **Environment Setup**
-   - Ensure you have a Virtual Machine (VM) set up.
+   - Download and install VirtualBox from [VirtualBox's official website](https://www.virtualbox.org/).
+   - Download the Alpine Linux ISO from [Alpine Linux's official website (https://alpinelinux.org/downloads/) and attach the ISO to the VM and install Alpine Linux.
    - Install Docker and Docker Compose on your VM.
 
 #### 2. **Project Structure**
