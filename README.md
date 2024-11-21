@@ -4,7 +4,7 @@ Inception is a project focused on setting up a small infrastructure composed of 
 
 #### 1. **Environment Setup**
    - Download and install VirtualBox from [VirtualBox's official website](https://www.virtualbox.org/).
-   - Download the Alpine Linux ISO from [Alpine Linux's official website (https://alpinelinux.org/downloads/) and attach the ISO to the VM and install Alpine Linux.
+   - Download the Alpine Linux ISO from [Alpine Linux's official website](https://alpinelinux.org/downloads/) and attach the ISO to the VM and install Alpine Linux.
    - Install Docker and Docker Compose on your VM.
 
 #### 2. **Project Structure**
