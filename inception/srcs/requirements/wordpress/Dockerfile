@@ -1,5 +1,5 @@
 # Use the official WordPress image as a base
-FROM wordpress:php7.4-fpm
+FROM wordpress:5.8.1-php7.4-fpm
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
