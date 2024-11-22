@@ -1,0 +1,54 @@
+services:
+  nginx:
+    build:
+      context: ./srcs/requirements/nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    ports:
+      - "443:443"
+    volumes:
+      - wordpress_files:/var/www/html
+      - ./srcs/requirements/nginx/conf:/etc/nginx/conf.d
+      - ./srcs/requirements/nginx/certs:/etc/nginx/certs
+    networks:
+      - inception_network
+    restart: always
+
+  wordpress:
+    build:
+      context: ./srcs/requirements/wordpress
+      dockerfile: Dockerfile
+    container_name: wordpress
+    volumes:
+      - wordpress_files:/var/www/html
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+    networks:
+      - inception_network
+    restart: always
+
+  db:
+    build:
+      context: ./srcs/requirements/mariadb
+      dockerfile: Dockerfile
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - wordpress_db:/var/lib/mysql
+    networks:
+      - inception_network
+    restart: always
+
+volumes:
+  wordpress_files:
+  wordpress_db:
+
+networks:
+  inception_network:
