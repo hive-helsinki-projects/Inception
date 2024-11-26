@@ -1,8 +1,8 @@
-# Use the official MariaDB image as a base
-FROM mariadb:10.5
+FROM alpine:3.19.2
 
-# Expose port 3306 for MariaDB
-EXPOSE 3306
+RUN apk update && \
+    apk add mariadb mariadb-client bash
+COPY tools/mariadb-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/mariadb-entrypoint.sh
 
-# Start MariaDB
-CMD ["mysqld"]
+ENTRYPOINT [ "mariadb-entrypoint.sh" ]

@@ -1,13 +1,16 @@
-# Use an official NGINX image as a base
-FROM nginx:1.21.6
+# Use the specified version of Alpine
+FROM alpine:3.19.2
 
-# Copy NGINX configuration files
-COPY ./conf /etc/nginx/conf
-COPY ./certs /etc/nginx/certs
+# Install Nginx, OpenSSL, and Bash
+RUN apk update && \
+    apk add nginx openssl bash
 
+# Copy the executable script for Nginx configuration
+COPY tools/nginx-entrypoint.sh /usr/local/bin/
 
-# Expose port 443 for HTTPS
-EXPOSE 443
+# Change permissions of the executable file and create necessary directories
+RUN chmod +x /usr/local/bin/nginx-entrypoint.sh && \
+    mkdir -p /etc/nginx/ssl
 
-# Start NGINX
-CMD ["nginx", "-g", "daemon off;"]
+# Set the entrypoint script for the container
+ENTRYPOINT [ "nginx-entrypoint.sh" ]
