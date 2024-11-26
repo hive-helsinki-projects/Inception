@@ -3,9 +3,6 @@ set -e
 
 # On the first container run, generate a certificate and configure the server
 if [ ! -e /etc/.firstrun ]; then
-    # Ensure the ssl directory exists
-    mkdir -p /etc/nginx/ssl
-
     # Generate a certificate for HTTPS
     openssl req -x509 -days 365 -newkey rsa:2048 -nodes \
         -out '/etc/nginx/ssl/cert.crt' \
@@ -16,14 +13,6 @@ if [ ! -e /etc/.firstrun ]; then
     # Configure nginx to serve static WordPress files and to pass PHP requests
     # to the WordPress container's php-fpm process
     cat << EOF >> /etc/nginx/http.d/default.conf
-
-server {
-    listen 80;
-    server_name $DOMAIN_NAME;
-
-    # Redirect all HTTP requests to HTTPS
-    return 301 https://$server_name$request_uri;
-    }
 
 server {
     listen 443 ssl http2;
