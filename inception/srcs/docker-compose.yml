@@ -16,6 +16,7 @@ services:
     networks:
       - docker-network
     image: mariadb
+
   nginx:
     container_name: nginx
     init: true
@@ -35,6 +36,7 @@ services:
       - wordpress
       - mariadb
     image: nginx
+    
   wordpress:
     container_name: wordpress
     init: true
