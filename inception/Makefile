@@ -12,3 +12,4 @@ down:
 clean:
 	docker-compose -f srcs/docker-compose.yml down --volumes
 	docker system prune -f
+	rm -rf srcs/data

@@ -11,5 +11,6 @@ RUN mkdir -p /etc/nginx/ssl && \
     -out /etc/nginx/ssl/nginx.crt
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf
+COPY index.html /usr/share/nginx/html/index.html
 
 CMD ["nginx", "-g", "daemon off;"]
