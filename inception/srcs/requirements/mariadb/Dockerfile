@@ -1,8 +1,8 @@
-FROM alpine:3.19.2
+FROM mariadb:10.6
 
-RUN apk update && \
-    apk add mariadb mariadb-client bash
-COPY tools/mariadb-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/mariadb-entrypoint.sh
+ENV MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+ENV MYSQL_DATABASE=${MYSQL_DATABASE}
+ENV MYSQL_USER=${MYSQL_USER}
+ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
-ENTRYPOINT [ "mariadb-entrypoint.sh" ]
+CMD ["mysqld"]
