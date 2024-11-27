@@ -11,6 +11,8 @@ RUN apk add --no-cache nginx openssl
   #  -out /etc/nginx/ssl/nginx.crt
 
 COPY setup_ssl.sh /usr/local/bin/setup_ssl.sh
+RUN ls -l /usr/local/bin/setup_ssl.sh
+RUN cat /usr/local/bin/setup_ssl.sh
 RUN chmod +x /usr/local/bin/setup_ssl.sh
 # Run the setup script to generate the SSL certificate
 RUN /usr/local/bin/setup_ssl.sh
