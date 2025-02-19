@@ -59,18 +59,28 @@ Inception is a project focused on setting up a small infrastructure composed of 
 ## Project Structure
 
 ```
-inception/
+.
 ├── Makefile
-├── srcs/
-│   ├── docker-compose.yml
-│   ├── .env
-│   ├── requirements/
-│   │   ├── nginx/
-│   │   │   ├── Dockerfile
-│   │   │   ├── conf/
-│   │   │   └── certs/
-│   │   ├── wordpress/
-│   │   │   ├── Dockerfile
-│   │   └── mariadb/
-│   │       ├── Dockerfile
+├── README.md
+└── srcs
+    ├── docker-compose.yml
+    └── requirements
+        ├── mariadb
+        │   ├── Dockerfile
+        │   ├── conf
+        │   │   └── my.cnf
+        │   └── mariadb-entrypoint.sh
+        ├── nginx
+        │   ├── Dockerfile
+        │   └── conf
+        │       └── nginx.conf
+        └── wordpress
+            ├── Dockerfile
+            ├── conf
+            │   └── wp-config
+            └── wordpress-entrypoint.sh
+
 ```
+
+## Virtual Machine Setup
+scp -P 4200 -r test123/ lkilpela@localhost:~/.
