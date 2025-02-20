@@ -1,5 +1,5 @@
 DC			=	cd srcs && docker compose
-VOLUME_PATH		=	/home/${USER}/data
+VOLUME_PATH		=	/Users/${USER}/data
 WORDPRESS_VOLUME	=	$(VOLUME_PATH)/wordpress
 MARIADB_VOLUME		=	$(VOLUME_PATH)/mariadb
 DOMAIN			=	${USER}.42.fr
