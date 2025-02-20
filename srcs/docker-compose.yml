@@ -42,7 +42,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./data/db:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
     networks:
       - inception-network
 
@@ -52,13 +52,13 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ${VOLUME_PATH}/mariadb
+      device: ~/data/mariadb
   wordpress_data:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: ${VOLUME_PATH}/wordpress
+      device: ~/data/wordpress
 
 networks:
   inception-network:

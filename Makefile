@@ -1,17 +1,13 @@
-DC			=	cd srcs && docker compose
-VOLUME_PATH		=	/Users/${USER}/data
-WORDPRESS_VOLUME	=	$(VOLUME_PATH)/wordpress
-MARIADB_VOLUME		=	$(VOLUME_PATH)/mariadb
-DOMAIN			=	${USER}.42.fr
+DC					=	cd srcs && docker compose
+DOMAIN				=	${USER}.42.fr
+
 
 all:	setup build up
 
 setup:
 	@echo "Creating data directories.."
-	@sudo mkdir -p $(WORDPRESS_VOLUME)
-	@sudo mkdir -p $(MARIADB_VOLUME)
-	@sudo chmod 777 $(WORDPRESS_VOLUME)
-	@sudo chmod 777 $(MARIADB_VOLUME)
+	@mkdir -p ~/data/mariadb && chmod 777 ~/data/mariadb
+	@mkdir -p ~/data/wordpress && chmod 777 ~/data/wordpress
 	@if ! grep -q "$(DOMAIN)" /etc/hosts; then \
 		echo "127.0.0.1 $(DOMAIN)" | sudo tee -a /etc/hosts; \
 	fi
@@ -38,9 +34,8 @@ clean:	down
 
 fclean: clean
 	@echo "Removing data directories.."
-	@sudo rm -rf $(VOLUME_PATH)
 	@echo "Removing domain from hosts file"
-	@sudo sed -i '/$(DOMAIN)/d' /etc/hosts
+	@sed -i '/$(DOMAIN)/d' /etc/hosts
 
 status:
 	@echo "Container status:"
