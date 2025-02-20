@@ -3,7 +3,7 @@ set -e
 
 wait_for_mariadb() {
 	echo "Waiting for MariaDB to be ready..."
-	while ! mysqladmin ping -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --silent; do
+	while ! mysqladmin ping -h"$WP_DB_HOST" -u"$WP_DB_USER" -p"$WP_DB_PASSWORD" --silent; do
 		echo "MariaDB is unavailable - sleeping"
 		sleep 5
 	done
@@ -19,23 +19,23 @@ if [ ! -f wp-config.php ]; then
 	fi
 	
 	wp config create \
-		--dbname=$WORDPRESS_DB_NAME \
-		--dbuser=$WORDPRESS_DB_USER \
-		--dbpass=$WORDPRESS_DB_PASSWORD \
-		--dbhost=$WORDPRESS_DB_HOST \
+		--dbname=$WP_DB_NAME \
+		--dbuser=$WP_DB_USER \
+		--dbpass=$WP_DB_PASSWORD \
+		--dbhost=$WP_DB_HOST \
 		--allow-root
 	wp core install \
-		--url=$WORDPRESS_URL \
-		--title=$WORDPRESS_TITLE \
-		--admin_user=$WORDPRESS_ADMIN_USER \
-		--admin_password=$WORDPRESS_ADMIN_PASSWORD \
-		--admin_email=$WORDPRESS_ADMIN_EMAIL \
+		--url=$WP_URL \
+		--title=$WP_TITLE \
+		--admin_user=$WP_ADMIN_USER \
+		--admin_password=$WP_ADMIN_PASSWORD \
+		--admin_email=$WP_ADMIN_EMAIL \
 		--allow-root
 	wp user create \
-		$WORDPRESS_USER \
-		$WORDPRESS_USER_EMAIL \
+		$WP_USER \
+		$WP_USER_EMAIL \
 		--role=author \
-		--user_pass=$WORDPRESS_USER_PASSWORD \
+		--user_pass=$WP_USER_PASSWORD \
 		--allow-root
 	echo "WordPress installation complete!"
 else

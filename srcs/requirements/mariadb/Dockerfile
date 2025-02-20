@@ -1,24 +1,24 @@
-FROM alpine:3.19.2
+FROM alpine:3.20.3
 
-# Combine RUN commands to reduce layers
-RUN apk update && apk add --no-cache \
-    mariadb \
-    mariadb-client \
-    mariadb-common \
-    bash && \
-    mkdir -p /run/mysqld /var/lib/mysql /var/log/mysql && \
-    chown -R mysql:mysql /run/mysqld /var/lib/mysql /var/log/mysql
+# Install MariaDB and MariaDB client
+RUN apk add --no-cache mariadb mariadb-client
+
+# Create the log directory and set permissions
+RUN mkdir -p /var/log/mysql && chown mysql:mysql /var/log/mysql
 
 # Copy configuration and entrypoint script
-COPY conf/my.cnf /etc/my.cnf.d/mariadb-server.cnf
-COPY tools/mariadb-entrypoint.sh /usr/local/bin/
+COPY --chown=mysql:mysql conf/my.cnf /etc/my.cnf
+COPY --chown=mysql:mysql tools/mariadb-entrypoint.sh /usr/local/bin/mariadb-entrypoint.sh
 
 # Make the entrypoint script executable
 RUN chmod +x /usr/local/bin/mariadb-entrypoint.sh
 
-# Expose the default MySQL port
+# Define the volume for MariaDB data
+VOLUME ["/var/lib/mysql"]
+
+# Expose the default MariaDB port
 EXPOSE 3306
 
 # Set the entrypoint and default command
 ENTRYPOINT ["mariadb-entrypoint.sh"]
-CMD ["mysqld", "--user=mysql"]
+CMD ["mysqld"]

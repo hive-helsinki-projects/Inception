@@ -1,50 +1,43 @@
 services:
-  nginx:
-    container_name: nginx
+  mariadb:
+    container_name: mariadb
     restart: always
+    build: requirements/mariadb
     env_file:
       - .env
-    build:
-      context: ./requirements/nginx
-      dockerfile: Dockerfile
-    ports:
-      - "443:443"
     volumes:
-      - wordpress_data:/var/www/html 
+      - mariadb_data:/var/lib/mysql
     networks:
-      - inception-network
-    depends_on:
-      - wordpress
-    image: "nginx"
+      - lknetwork
 
   wordpress:
     container_name: wordpress
     restart: always
     env_file:
       - .env
-    build:
-      context: ./requirements/wordpress
-      dockerfile: Dockerfile
+    build: requirements/wordpress
     volumes:
-      - wordpress_data:/var/www/html
+      - wordpress_data:/var/www/wp/
     networks:
-      - inception-network
+      - lknetwork
     depends_on:
       - mariadb
-    image: "wordpress"
 
-  mariadb:
-    container_name: mariadb
+  nginx:
+    container_name: nginx
     restart: always
-    build:
-      context: ./requirements/mariadb
-      dockerfile: Dockerfile
     env_file:
       - .env
+    build: requirements/nginx
+    ports:
+      - "443:443"
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - wordpress_data:/var/www/wp/
     networks:
-      - inception-network
+      - lknetwork
+    depends_on:
+      - wordpress
+
 
 volumes:
   mariadb_data:
@@ -53,6 +46,7 @@ volumes:
       type: none
       o: bind
       device: ~/data/mariadb
+
   wordpress_data:
     driver: local
     driver_opts:
@@ -61,6 +55,6 @@ volumes:
       device: ~/data/wordpress
 
 networks:
-  inception-network:
-    name: inception-network
+  lknetwork:
+    name: lknetwork
     driver: bridge
