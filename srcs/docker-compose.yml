@@ -42,17 +42,21 @@ services:
     depends_on:
       - wordpress
     ports:
-      - "443:443"
+      - "8443:443"
 
 volumes:
   wordpress_data:
     driver: local
     driver_opts:
       type: none
-      device: requirements/wordpress
+      device: ${VOLUME_PATH}/wordpress
       o: bind
   mariadb_data:
     driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_PATH}/mariadb
+      o: bind
 
 networks:
   inception:

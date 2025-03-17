@@ -4,6 +4,7 @@ RUN	apk update && apk add --no-cache \
 	nginx \
 	openssl
 
+
 RUN	mkdir -p /etc/nginx/ssl && \
 	openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 	-keyout /etc/nginx/ssl/nginx.key \
@@ -11,6 +12,8 @@ RUN	mkdir -p /etc/nginx/ssl && \
 	-subj "/CN=${DOMAIN_NAME}"
 
 COPY	conf/nginx.conf /etc/nginx/nginx.conf
+
+USER nginx
 
 EXPOSE	443
 

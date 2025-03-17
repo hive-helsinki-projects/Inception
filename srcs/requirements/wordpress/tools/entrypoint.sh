@@ -25,13 +25,6 @@ fi
 
 wait_for_mariadb
 
-# Set permissions for WordPress directory
-echo "🔹 Setting permissions for WordPress directory..."
-chown -R www-data:www-data /var/www/html
-chmod -R 755 /var/www/html
-
-# ...existing code...
-
 if [ ! -f wp-config.php ]; then
     echo "🔹 WordPress configuration not found. Installing WordPress..."
     
@@ -66,12 +59,6 @@ else
     echo "✅ WordPress is already installed. Skipping setup."
 fi
 
-# Secure wp-config.php
-if [ -f wp-config.php ]; then
-    echo "🔹 Securing wp-config.php..."
-    chown www-data:www-data wp-config.php || echo "⚠️ Warning: Unable to change ownership"
-    chmod 600 wp-config.php
-fi
 
 # Trap SIGTERM/SIGINT for clean shutdown
 trap "echo '🔹 Stopping PHP-FPM...'; kill -QUIT $(cat /var/run/php-fpm.pid); exit 0" SIGTERM SIGINT

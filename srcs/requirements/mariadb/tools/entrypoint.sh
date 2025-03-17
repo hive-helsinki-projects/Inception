@@ -23,4 +23,5 @@ GRANT ALL PRIVILEGES ON ${WP_DB_NAME}.* TO '${WP_DB_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
 
+echo "🔹 Starting mariaDB server.."
 exec mysqld --user=mysql --datadir=/var/lib/mysql
