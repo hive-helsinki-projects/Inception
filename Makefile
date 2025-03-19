@@ -1,46 +1,48 @@
-DC					=	cd srcs && docker compose
-VOLUME_PATH			=	/home/${USER}/data
-WORDPRESS_VOLUME	=	$(VOLUME_PATH)/wordpress
-MARIADB_VOLUME		=	$(VOLUME_PATH)/mariadb
-DOMAIN				=	${USER}.42.fr
+DC                  = cd srcs && docker compose
+VOLUME_PATH         = /home/lkilpela/data
+WORDPRESS_VOLUME    = $(VOLUME_PATH)/wordpress
+MARIADB_VOLUME      = $(VOLUME_PATH)/mariadb
+DOMAIN              = lkilpela.42.fr
 
 all: setup build up
 
 setup:
-	@echo "Creating data directories.."
-	@mkdir -p $(WORDPRESS_VOLUME)
-	@mkdir -p $(MARIADB_VOLUME)
-# @chmod 777 $(WORDPRESS_VOLUME)
-# @chmod 777 $(MARIADB_VOLUME)
+	@echo "Creating required data directories..."
+	@mkdir -p $(WORDPRESS_VOLUME) $(MARIADB_VOLUME)
 	@if ! grep -q "$(DOMAIN)" /etc/hosts; then \
-	echo "127.0.0.1 $(DOMAIN)" | tee -a /etc/hosts; \
+		echo "Adding $(DOMAIN) to /etc/hosts"; \
+		echo "127.0.0.1 $(DOMAIN)" | sudo tee -a /etc/hosts; \
 	fi
 
 build:
+	@echo "Building Docker images..."
 	@$(DC) build
 
 up:
+	@echo "Starting containers..."
 	@$(DC) up -d
 
 down:
+	@echo "Stopping and removing containers..."
 	@$(DC) down
 
 logs:
+	@echo "Displaying logs..."
 	@$(DC) logs -f
 
 ps:
+	@echo "Listing running containers..."
 	@$(DC) ps
 
 clean:
-	@echo "Removing data directories.."
-	@rm -rf $(WORDPRESS_VOLUME)
-	@rm -rf $(MARIADB_VOLUME)
-	docker stop $(shell docker ps -a -q)
-	docker rm $(shell docker ps -a -q)
-	docker rmi $(shell docker images -q)
-	docker volume rm $(shell docker volume ls -q)
-	docker network rm $(shell docker network ls -q) 2>/dev/null
+	@echo "Removing volumes and Docker resources..."
+	@rm -rf $(WORDPRESS_VOLUME) $(MARIADB_VOLUME)
+	@docker stop $$(docker ps -q) 2>/dev/null || true
+	@docker rm $$(docker ps -aq) 2>/dev/null || true
+	@docker rmi $$(docker images -q) 2>/dev/null || true
+	@docker volume prune -f
+	@docker network prune -f
 
-restart: clean down up
+restart: down build up
 
-.PHONY: build up down logs ps restart setup clean
+.PHONY: all setup build up down logs ps clean restart

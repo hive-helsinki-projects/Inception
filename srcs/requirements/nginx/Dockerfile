@@ -1,24 +1,31 @@
-FROM	alpine:3.20.3
+FROM alpine:3.20.6
 
-RUN addgroup -S nginx && \
-    adduser -S -G nginx -g nginx nginx
+# Set environment variables for SSL certificate details
+ENV SSL_DIR="/etc/nginx/ssl" \
+    SSL_DAYS=365 \
+    SSL_KEY="/etc/nginx/ssl/nginx.key" \
+    SSL_CRT="/etc/nginx/ssl/nginx.crt" \
+    SSL_SUBJ="/C=FI/ST=UUSIMA/L=HELSINKI/O=HIVE/OU=HIVE/CN=lkilpela.42.fr"
 
-RUN apk update && apk add --no-cache \
-    nginx \
-    openssl && \
-    mkdir -p /etc/nginx/ssl && \
-    chown -R nginx:nginx /etc/nginx/ssl  && \
-    chmod -R 755 /etc/nginx/ssl && \
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout /etc/nginx/ssl/nginx.key \
-    -out /etc/nginx/ssl/nginx.crt \
-    -subj "/C=FI/ST=UUSIMA/L=HELSINKI/O=HIVE/OU=HIVE/CN=lkilpela.42.fr" && \
-    chmod 644 /etc/nginx/ssl/nginx.key
+# Install dependencies, create nginx user/group, and set up SSL
+RUN apk add --no-cache nginx openssl \
+    && addgroup -S nginx || true \
+    && adduser -S -G nginx -g nginx nginx || true \
+    && mkdir -p ${SSL_DIR} \
+    && chown -R nginx:nginx ${SSL_DIR} \
+    && chmod -R 755 ${SSL_DIR} \
+    && openssl req -x509 -nodes -days ${SSL_DAYS} -newkey rsa:2048 \
+        -keyout ${SSL_KEY} -out ${SSL_CRT} -subj "${SSL_SUBJ}" \
+    && chmod 644 ${SSL_KEY}
 
+# Copy custom Nginx configuration
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
-USER nginx
-
+# Expose HTTPS port
 EXPOSE 443
 
+# Switch to nginx user for security
+USER nginx
+
+# Run Nginx in the foreground
 CMD ["nginx", "-g", "daemon off;"]
