@@ -1,7 +1,7 @@
 # Use Alpine Linux as the base image
 FROM alpine:3.20.6
 
-# Set environment variables for PHP & WP-CLI
+# Set environment variables for WP-CLI
 ENV WP_CLI_URL="https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"
 
 # Install required dependencies in a single optimized layer
