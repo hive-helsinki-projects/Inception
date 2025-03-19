@@ -17,12 +17,6 @@ wait_for_mariadb() {
     echo "✅ MariaDB is ready!"
 }
 
-# Validate admin username
-if echo "$WP_ADMIN_USER" | grep -qiE 'admin|administrator'; then
-    echo "❌ Error: Admin username cannot contain 'admin' or 'administrator'. Exiting..."
-    exit 1
-fi
-
 wait_for_mariadb
 
 if [ ! -f wp-config.php ]; then
@@ -58,10 +52,6 @@ if [ ! -f wp-config.php ]; then
 else
     echo "✅ WordPress is already installed. Skipping setup."
 fi
-
-
-# Trap SIGTERM/SIGINT for clean shutdown
-trap "echo '🔹 Stopping PHP-FPM...'; kill -QUIT $(cat /var/run/php-fpm.pid); exit 0" SIGTERM SIGINT
 
 echo "🔹 Starting PHP-FPM..."
 exec "$@"

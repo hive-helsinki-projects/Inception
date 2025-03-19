@@ -1,12 +1,6 @@
 # Use Alpine Linux as the base image
 FROM alpine:3.20.3
 
-RUN addgroup -S nginx \
-	&& adduser -S -G nginx -g nginx nginx \
-	&& mkdir -p /var/www/html \
-	&& chown -R nginx:nginx /var/www/html \
-	&& chmod -R 755 /var/www/html
-
 # Install required dependencies in a single RUN layer
 RUN apk add --no-cache \
 		php83 \
@@ -22,12 +16,16 @@ RUN apk add --no-cache \
 		php83-session \
 		mariadb-client \
 		curl \
-		bash && \
-	# Install WP-CLI
-	curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
-	chmod +x /usr/local/bin/wp
+		bash \
+		# Create wordpress work directory and set permissions
+		mkdir -p /var/www/html && \
+    	chown -R www-data:www-data /var/www/html && \
+    	chmod -R 755 /var/www/html \
+		# Install WP-CLI
+		curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+		&& chmod +x /usr/local/bin/wp
 
-	# Set working directory
+# Set working directory
 WORKDIR /var/www/html
 
 # Set PHP memory limit
@@ -37,6 +35,9 @@ RUN echo "memory_limit=500M" >> /etc/php83/php.ini
 COPY conf/wp-config.php /var/www/html/wp-config.php
 COPY conf/www.conf /etc/php83/php-fpm.d/www.conf
 COPY tools/entrypoint.sh /entrypoint.sh
+
+RUN addgroup -S nginx && \
+    adduser -S -G nginx -g nginx nginx
 
 RUN chmod +x /entrypoint.sh
 

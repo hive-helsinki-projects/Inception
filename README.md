@@ -83,4 +83,6 @@ Inception is a project focused on setting up a small infrastructure composed of 
 ```
 
 ## Virtual Machine Setup
-scp -P 4200 -r test123/ lkilpela@localhost:~/.
+scp -P 2222 -r /home/lkilpela/Inception localhost:/home/lkilpela
+
+ssh localhost -p 2222
