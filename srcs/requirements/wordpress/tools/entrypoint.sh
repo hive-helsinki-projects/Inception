@@ -3,7 +3,7 @@ set -e  # Exit immediately if a command exits with a non-zero status.
 
 wait_for_mariadb() {
     echo "🔹 Waiting for MariaDB to be ready..."
-    TIMEOUT=60
+    TIMEOUT=120
     ELAPSED=0
 
     while ! mysqladmin ping -h"$WP_DB_HOST" --silent; do
