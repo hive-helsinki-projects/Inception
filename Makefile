@@ -36,7 +36,7 @@ ps:
 
 clean:
 	@echo "Removing volumes and Docker resources..."
-	@rm -rf $(WORDPRESS_VOLUME) $(MARIADB_VOLUME)
+	@sudo rm -rf $(WORDPRESS_VOLUME) $(MARIADB_VOLUME)
 	@docker stop $$(docker ps -q) 2>/dev/null || true
 	@docker rm $$(docker ps -aq) 2>/dev/null || true
 	@docker rmi $$(docker images -q) 2>/dev/null || true
